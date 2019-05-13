@@ -13,7 +13,7 @@ import React from 'react';
 import ErrorPage from 'next/error';
 import { default as NextApp, NextAppContext, AppProps, DefaultAppIProps } from 'next/app';
 
-interface WithErrorProps {
+export interface WithErrorProps {
   error?: {
     statusCode: number;
   };
