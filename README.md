@@ -2,7 +2,23 @@
 
 Next.js HoC to render the Error page and send the correct HTTP status code from any page.
 
-This higher-order-components allows you to easily return Next.js's Error page + the correct HTTP status code just by defining `error.statusCode` in your pages `getInitialProps`.
+This higher-order-components allows you to easily return Next.js's Error page + the correct HTTP status code just by defining `error.statusCode` in your pages `getInitialProps`:
+
+```jsx
+// pages/something.js
+
+const SomePage = () => (
+  <h1>I will only render if error.statusCode < 400</h1>
+)
+
+SomePage.getInitialProps = async () => {
+  return {
+    error: {
+      statusCode: 401
+    }
+  };
+}
+```
 
 ## Installation
 
@@ -12,7 +28,9 @@ npm install next-with-error
 
 ## Usage
 
-Adapt `pages/_app.js` so it looks similar to [what is described by the official Next.js documentation](https://nextjs.org/docs#custom-app) and add the `withError` HoC.
+### withError([ErrorPage])(App)
+
+Adapt `pages/_app.js` so it looks similar to [what is described in the official Next.js documentation](https://nextjs.org/docs#custom-app) and add the `withError` HoC.
 
 <details>
  <summary>Example</summary>
@@ -64,7 +82,7 @@ class ArticlePage extends React.Component {
     const article = await fetchPost();
 
     if (!article) {
-      // No article found
+      // No article found, let's display a "not found" page
       // Will return a 404 status code + display the Error page
       return {
         error: {
@@ -94,7 +112,7 @@ export default HomePage;
 
 </details>
 
-## Custom error page
+### Custom error page
 
 By default, `withError` will display the default Next.js error page. If you need to display your own error page, you will need to pass it as the first parameter of your HoC:
 
@@ -106,7 +124,7 @@ import ErrorPage from './_error';
 export default withError(ErrorPage)(MyApp);
 ```
 
-## Custom props
+### Custom props
 
 You can also pass custom props to your Error Page component by adding anything you would like in the `error` object:
 
