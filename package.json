@@ -1,0 +1,38 @@
+{
+  "name": "next-with-error",
+  "version": "0.1.0",
+  "description": "Next.js HoC to render the Error page and send the correct HTTP status code from any page",
+  "main": "dist/next-with-error.js",
+  "scripts": {
+    "preversion": "npm run test",
+    "prepublishOnly": "npm run build",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martpie/next-with-error.git"
+  },
+  "keywords": [
+    "Next.js",
+    "error",
+    "http",
+    "statuscode"
+  ],
+  "author": "Pierre de la Martinière <pierre.de.la.martiniere@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/martpie/next-with-error/issues"
+  },
+  "homepage": "https://github.com/martpie/next-with-error#readme",
+  "peerDependencies": {
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "next": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/next": "^8.0.5",
+    "prettier": "^1.17.1",
+    "typescript": "3.4.5"
+  }
+}
