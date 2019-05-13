@@ -8,15 +8,21 @@ This higher-order-components allows you to easily return Next.js's Error page + 
 // pages/something.js
 
 const SomePage = () => (
-  <h1>I will only render if error.statusCode < 400</h1>
+  <h1>I will only render if error.statusCode is lesser than 400</h1>
 )
 
 SomePage.getInitialProps = async () => {
-  return {
-    error: {
-      statusCode: 401
-    }
-  };
+  const isAuthenticated = await getUser();
+
+  if (!isAuthenticated) {
+    return {
+      error: {
+        statusCode: 401;
+      }
+    };
+  }
+
+  return {};
 }
 ```
 
@@ -28,7 +34,7 @@ npm install next-with-error
 
 ## Usage
 
-### withError([ErrorPage])(App)
+### `withError([ErrorPage])(App)`
 
 Adapt `pages/_app.js` so it looks similar to [what is described in the official Next.js documentation](https://nextjs.org/docs#custom-app) and add the `withError` HoC.
 
@@ -69,9 +75,6 @@ export default withError()(MyApp);
 
 Then, in any of your pages, define `error.statusCode` if needed in your page's `getInitialProps`
 
-<details>
- <summary>Example</summary>
-
 ```jsx
 // pages/article.js
 import React from 'react';
@@ -109,8 +112,6 @@ ArticlePage.getInitialProps = async () => {};
 
 export default HomePage;
 ```
-
-</details>
 
 ### Custom error page
 
