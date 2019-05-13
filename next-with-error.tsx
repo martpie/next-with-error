@@ -16,6 +16,7 @@ import { default as NextApp, NextAppContext, AppProps, DefaultAppIProps } from '
 export interface WithErrorProps {
   error?: {
     statusCode: number;
+    [key: string]: any;
   };
 }
 
@@ -23,34 +24,38 @@ interface AppInitialProps {
   pageProps: WithErrorProps;
 }
 
-const withError = function<P extends WithErrorProps>(WrappedComponent: typeof NextApp) {
-  return class WithError extends React.Component<P & WithErrorProps & AppProps & DefaultAppIProps> {
-    public static getInitialProps = async (appContext: NextAppContext) => {
-      let appProps: AppInitialProps = { pageProps: {} };
+const withError = function(Error = ErrorPage) {
+  return function<P extends WithErrorProps>(WrappedComponent: typeof NextApp) {
+    return class WithError extends React.Component<P & WithErrorProps & AppProps & DefaultAppIProps> {
+      public static getInitialProps = async (appContext: NextAppContext) => {
+        let appProps: AppInitialProps = { pageProps: {} };
 
-      if (WrappedComponent.getInitialProps) {
-        appProps = await WrappedComponent.getInitialProps(appContext);
+        if (WrappedComponent.getInitialProps) {
+          appProps = await WrappedComponent.getInitialProps(appContext);
+        }
+
+        const { res } = appContext.ctx;
+        const { error } = appProps.pageProps;
+
+        if (error && res) {
+          res.statusCode = error.statusCode;
+        }
+
+        return appProps;
+      };
+
+      render() {
+        const { pageProps }: AppInitialProps = this.props;
+        const { error } = pageProps;
+
+        if (error && error.statusCode >= 400) {
+          const { statusCode, ...additionalErrorProps } = error;
+          return <Error statusCode={error.statusCode} {...additionalErrorProps} />;
+        }
+
+        return <WrappedComponent {...this.props} />;
       }
-
-      const { res } = appContext.ctx;
-      const { error } = appProps.pageProps;
-
-      if (error && res) {
-        res.statusCode = error.statusCode;
-      }
-
-      return appProps;
     };
-
-    render() {
-      const { error } = this.props.pageProps;
-
-      if (error && error.statusCode >= 400) {
-        return <ErrorPage statusCode={error.statusCode} />;
-      }
-
-      return <WrappedComponent {...this.props} />;
-    }
   };
 };
 

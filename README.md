@@ -44,7 +44,7 @@ export class MyApp extends App {
   }
 }
 
-export default withError(MyApp);
+export default withError()(MyApp);
 ```
 
 </details>
@@ -57,12 +57,14 @@ Then, in any of your pages, define `error.statusCode` if needed in your page's `
 ```jsx
 // pages/article.js
 import React from 'react';
+import fetchPost from '../util/fetch-post';
 
 class ArticlePage extends React.Component {
   static async getInitialProps() {
-    const article = await getPost();
+    const article = await fetchPost();
 
     if (!article) {
+      // No article found
       // Will return a 404 status code + display the Error page
       return {
         error: {
@@ -91,3 +93,52 @@ export default HomePage;
 ```
 
 </details>
+
+## Custom error page
+
+By default, `withError` will display the default Next.js error page. If you need to display your own error page, you will need to pass it as the first parameter of your HoC:
+
+```jsx
+import ErrorPage from './_error';
+
+// ...
+
+export default withError(ErrorPage)(MyApp);
+```
+
+## Custom props
+
+You can also pass custom props to your Error Page component by adding anything you would like in the `error` object:
+
+```jsx
+// /pages/article.js
+const HomePage = () => <h1>Hello there!</h1>;
+
+HomePage.getInitialProps = () => {
+  return {
+    error: {
+      statusCode: 401,
+      message: 'oopsie'
+    }
+  };
+};
+
+export default HomePage;
+```
+
+```jsx
+// /pages/_error.js
+
+import React from 'react';
+
+const Error = (props) => {
+  return (
+    <>
+      <h1>Custom error page: {props.statusCode}</h1>
+      <p>{props.message}</p>
+    </>
+  );
+};
+
+export default Error;
+```
