@@ -3,6 +3,9 @@
   "version": "0.1.1",
   "description": "Next.js HoC to render the Error page and send the correct HTTP status code from any page",
   "main": "dist/next-with-error.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "preversion": "npm run test",
     "prepublishOnly": "npm run build",
