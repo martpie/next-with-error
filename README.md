@@ -108,8 +108,6 @@ class ArticlePage extends React.Component {
   }
 }
 
-ArticlePage.getInitialProps = async () => {};
-
 export default HomePage;
 ```
 
