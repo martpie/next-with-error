@@ -11,7 +11,7 @@
 
 import React from 'react';
 import ErrorPage from 'next/error';
-import { default as NextApp, NextAppContext, AppProps, DefaultAppIProps } from 'next/app';
+import { default as NextApp, AppContext, AppProps } from 'next/app';
 
 export interface WithErrorProps {
   error?: {
@@ -20,14 +20,19 @@ export interface WithErrorProps {
   };
 }
 
+export type ExcludeErrorProps<P> = Pick<
+  P,
+  Exclude<keyof P, keyof WithErrorProps>
+>
+
 interface AppInitialProps {
   pageProps: WithErrorProps;
 }
 
 const withError = function(Error = ErrorPage) {
   return function<P extends WithErrorProps>(WrappedComponent: typeof NextApp) {
-    return class WithError extends React.Component<P & WithErrorProps & AppProps & DefaultAppIProps> {
-      public static getInitialProps = async (appContext: NextAppContext) => {
+    return class WithError extends React.Component<P & WithErrorProps & AppProps> {
+      public static getInitialProps = async (appContext: AppContext) => {
         let appProps: AppInitialProps = { pageProps: {} };
 
         if (WrappedComponent.getInitialProps) {
