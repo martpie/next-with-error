@@ -1,19 +1,17 @@
-//
-
 import React from 'react';
 import ErrorPage from 'next/error';
 import { default as NextApp, AppContext, AppProps } from 'next/app';
 
-export interface WithErrorProps<T = Record<string, any>> {
+export interface PageErrorInitialProps<T = Record<string, any>> {
   error?: {
     statusCode: number;
   } & T;
 }
 
-export type ExcludeErrorProps<P> = Pick<P, Exclude<keyof P, keyof WithErrorProps>>;
+export type ExcludeErrorProps<P> = Pick<P, Exclude<keyof P, keyof PageErrorInitialProps>>;
 
 type AppInitialProps = {
-  pageProps: WithErrorProps;
+  pageProps: PageErrorInitialProps;
 };
 
 /**
@@ -22,7 +20,7 @@ type AppInitialProps = {
 export const generatePageError = function<T extends Record<string, any>>(
   statusCode: number,
   params: T
-): WithErrorProps<T> {
+): PageErrorInitialProps<T> {
   return {
     error: {
       statusCode,
@@ -42,8 +40,8 @@ export const generatePageError = function<T extends Record<string, any>>(
  * https://github.com/nuxt/nuxt.js/issues/895#issuecomment-308682972
  */
 const withError = function(Error = ErrorPage) {
-  return function<P extends WithErrorProps>(WrappedComponent: typeof NextApp) {
-    return class WithError extends React.Component<P & WithErrorProps & AppProps> {
+  return function<P extends PageErrorInitialProps>(WrappedComponent: typeof NextApp) {
+    return class WithError extends React.Component<P & PageErrorInitialProps & AppProps> {
       public static getInitialProps = async (appContext: AppContext) => {
         let appProps: AppInitialProps = { pageProps: {} };
 
