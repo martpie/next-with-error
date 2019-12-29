@@ -1,3 +1,36 @@
+//
+
+import React from 'react';
+import ErrorPage from 'next/error';
+import { default as NextApp, AppContext, AppProps } from 'next/app';
+
+export interface WithErrorProps<T = Record<string, any>> {
+  error?: {
+    statusCode: number;
+  } & T;
+}
+
+export type ExcludeErrorProps<P> = Pick<P, Exclude<keyof P, keyof WithErrorProps>>;
+
+type AppInitialProps = {
+  pageProps: WithErrorProps;
+};
+
+/**
+ * Small helper to generate errors object if needed
+ */
+export const generatePageError = function<T extends Record<string, any>>(
+  statusCode: number,
+  params: T
+): WithErrorProps<T> {
+  return {
+    error: {
+      statusCode,
+      ...params
+    }
+  };
+};
+
 /**
  * This higher-order component is used to render the Error page if a HTTP status
  * code >400 is thrown by one of the pages.
@@ -8,27 +41,6 @@
  * https://spectrum.chat/next-js/general/error-handling-in-async-getinitialprops~99400c6c-0da8-4de5-aecd-2ecf122e8ad0
  * https://github.com/nuxt/nuxt.js/issues/895#issuecomment-308682972
  */
-
-import React from 'react';
-import ErrorPage from 'next/error';
-import { default as NextApp, AppContext, AppProps } from 'next/app';
-
-export interface WithErrorProps {
-  error?: {
-    statusCode: number;
-    [key: string]: any;
-  };
-}
-
-export type ExcludeErrorProps<P> = Pick<
-  P,
-  Exclude<keyof P, keyof WithErrorProps>
->
-
-interface AppInitialProps {
-  pageProps: WithErrorProps;
-}
-
 const withError = function(Error = ErrorPage) {
   return function<P extends WithErrorProps>(WrappedComponent: typeof NextApp) {
     return class WithError extends React.Component<P & WithErrorProps & AppProps> {

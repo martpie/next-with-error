@@ -111,6 +111,24 @@ class ArticlePage extends React.Component {
 export default HomePage;
 ```
 
+### `generatePageError(statusCode[, additionalProps])`
+
+If you find the code to write the error object is a bit verbose, feel free to use the `generatePageError` helper:
+
+```jsx
+SomePage.getInitialProps = async () => {
+  const isAuthenticated = await getUser();
+
+  if (!isAuthenticated) {
+    return generatePageError(401);
+  }
+
+  return {};
+};
+```
+
+You can use the `additionalProps` argument to pass [custom props to the Error component](#custom-props).
+
 ### Custom error page
 
 By default, `withError` will display the default Next.js error page. If you need to display your own error page, you will need to pass it as the first parameter of your HoC:
