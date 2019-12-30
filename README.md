@@ -1,6 +1,6 @@
 # next-with-error
 
-Next.js HoC to render the Error page and send the correct HTTP status code from any page.
+Next.js plugin to render the Error page and send the correct HTTP status code from any page's `getInitialProps`.
 
 This higher-order-components allows you to easily return Next.js's Error page + the correct HTTP status code just by defining `error.statusCode` in your pages `getInitialProps`:
 
@@ -22,7 +22,9 @@ SomePage.getInitialProps = async () => {
     };
   }
 
-  return {};
+  return {
+    // ...
+  };
 }
 ```
 
@@ -140,6 +142,8 @@ import ErrorPage from './_error';
 
 export default withError(ErrorPage)(MyApp);
 ```
+
+Work to automate this [is tracked here](https://github.com/martpie/next-with-error/issues/2).
 
 ### Custom props
 
