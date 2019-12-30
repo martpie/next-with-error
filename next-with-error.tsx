@@ -19,12 +19,12 @@ type AppInitialProps = {
  */
 export const generatePageError = function<T extends Record<string, any>>(
   statusCode: number,
-  params: T
-): PageErrorInitialProps<T> {
+  params?: T
+): PageErrorInitialProps<T | {}> {
   return {
     error: {
       statusCode,
-      ...params
+      ...(params || {})
     }
   };
 };
