@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:10
+    working_directory: ~/ci
+    steps:
+      - checkout
+      - run:
+          name: Display node and npm informations
+          command: npm version
+      - restore_cache:
+          keys:
+            - npm-cache-{{ checksum "package-lock.json" }}
+            - mpm-cache
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: 'Unit tests'
+          command: 'npm run test'
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-cache-{{ checksum "package-lock.json" }}
