@@ -44,29 +44,22 @@ Adapt `pages/_app.js` so it looks similar to [what is described in the official 
  <summary>Example</summary>
 
 ```jsx
-import App, { Container } from 'next/app';
 import React from 'react';
+import App from 'next/app';
 
 import withError from 'next-with-error';
 
-export class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
+class MyApp extends App {
+  static async getInitialProps(appContext) {
+    // calls page's `getInitialProps` and fills `appProps.pageProps`
+    const appProps = await App.getInitialProps(appContext);
 
-    if (Component && Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
+    return { ...appProps };
   }
 
   render() {
     const { Component, pageProps } = this.props;
-    return (
-      <Container>
-        <Component {...pageProps} />
-      </Container>
-    );
+    return <Component {...pageProps} />;
   }
 }
 
