@@ -1,5 +1,5 @@
-describe('basic end-to-end test', () => {
-  const BASE_URL = 'http://localhost:3000';
+describe('custom-error end-to-end test', () => {
+  const BASE_URL = 'http://localhost:3001';
 
   it('root page should be correctly displayed and return a 200 http code', async () => {
     const page = await browser.newPage();
@@ -27,8 +27,8 @@ describe('basic end-to-end test', () => {
 
     expect(response.status()).toBe(404);
 
-    const content = await page.$eval('h2', (e) => e.textContent);
-    expect(content).toBe('This page could not be found.');
+    const content = await page.$eval('p', (e) => e.textContent);
+    expect(content).toBe('could not find that');
   });
 
   it('custom page should return a 404 http code when error.statusCode is equal to 500 and the error page should be displayed', async () => {
@@ -39,7 +39,7 @@ describe('basic end-to-end test', () => {
 
     expect(response.status()).toBe(500);
 
-    const content = await page.$eval('h2', (e) => e.textContent);
-    expect(content).toBe('Internal Server Error.');
+    const content = await page.$eval('p', (e) => e.textContent);
+    expect(content).toBe('something went wrong');
   });
 });

@@ -12,10 +12,16 @@ jobs:
       - restore_cache:
           keys:
             - npm-cache-{{ checksum "package-lock.json" }}
-            - mpm-cache
+            - npm-cache
       - run:
           name: Install dependencies
           command: npm ci
+      - run:
+          name: Install tests apps dependencies
+          command: npm ci --prefix=src/__tests__/__apps__/basic && npm ci --prefix=src/__tests__/__apps__/custom-error
+      - run:
+          name: 'Build'
+          command: 'npm run build'
       - run:
           name: 'Unit tests'
           command: 'npm run test'
