@@ -61,4 +61,5 @@ typings/
 .next
 
 # Custom
-dist
+dist/*
+!dist/.keep

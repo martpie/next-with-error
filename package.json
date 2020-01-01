@@ -44,7 +44,7 @@
     "jest-dev-server": "^4.4.0",
     "jest-environment-puppeteer": "^4.4.0",
     "jest-puppeteer": "^4.4.0",
-    "next": "^9.1.5",
+    "next": "^9.1.6",
     "prettier": "^1.19.1",
     "puppeteer": "^2.0.0",
     "react": "^16.12.0",

@@ -1,7 +1,7 @@
 import React from 'react';
 import App from 'next/app';
-import withError from 'next-with-error';
 
+import withError from '../next-with-error/next-with-error';
 import Error from './_error';
 
 class MyApp extends App {

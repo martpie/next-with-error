@@ -1,6 +1,7 @@
 import React from 'react';
 import App from 'next/app';
-import withError from 'next-with-error';
+
+import withError from '../next-with-error/next-with-error';
 
 class MyApp extends App {
   static async getInitialProps(appContext) {
