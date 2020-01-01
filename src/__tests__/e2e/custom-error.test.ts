@@ -1,7 +1,7 @@
 describe('custom-error end-to-end test', () => {
   const BASE_URL = 'http://localhost:3001';
 
-  it('root page should be correctly displayed and return a 200 http code', async () => {
+  test('root page should be correctly displayed and return a 200 http code', async () => {
     const page = await browser.newPage();
     const response = await page.goto(`${BASE_URL}/`);
 
@@ -10,7 +10,7 @@ describe('custom-error end-to-end test', () => {
     expect(response.status()).toBe(200);
   });
 
-  it('custom page should be correctly displayed and return a 200 http code when no error is present', async () => {
+  test('custom page should be correctly displayed and return a 200 http code when no error is present', async () => {
     const page = await browser.newPage();
     const response = await page.goto(`${BASE_URL}/posts/existing-one`);
 
@@ -19,7 +19,7 @@ describe('custom-error end-to-end test', () => {
     expect(response.status()).toBe(200);
   });
 
-  it('custom page should return a 404 http code when error.statusCode is equal to 404 and the error page should be displayed', async () => {
+  test('custom page should return a 404 http code when error.statusCode is equal to 404 and the error page should be displayed', async () => {
     const page = await browser.newPage();
     const response = await page.goto(`${BASE_URL}/posts/unknown-one`);
 
@@ -31,7 +31,7 @@ describe('custom-error end-to-end test', () => {
     expect(content).toBe('could not find that');
   });
 
-  it('custom page should return a 404 http code when error.statusCode is equal to 500 and the error page should be displayed', async () => {
+  test('custom page should return a 404 http code when error.statusCode is equal to 500 and the error page should be displayed', async () => {
     const page = await browser.newPage();
     const response = await page.goto(`${BASE_URL}/posts/crash-me`);
 
