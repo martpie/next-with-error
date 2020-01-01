@@ -1,6 +1,6 @@
 # next-with-error
 
-Next.js HoC to render the Error page and send the correct HTTP status code from any page.
+Next.js plugin to render the Error page and send the correct HTTP status code from any page's `getInitialProps`.
 
 This higher-order-components allows you to easily return Next.js's Error page + the correct HTTP status code just by defining `error.statusCode` in your pages `getInitialProps`:
 
@@ -22,7 +22,9 @@ SomePage.getInitialProps = async () => {
     };
   }
 
-  return {};
+  return {
+    // ...
+  };
 }
 ```
 
@@ -42,29 +44,22 @@ Adapt `pages/_app.js` so it looks similar to [what is described in the official 
  <summary>Example</summary>
 
 ```jsx
-import App, { Container } from 'next/app';
 import React from 'react';
+import App from 'next/app';
 
 import withError from 'next-with-error';
 
-export class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
+class MyApp extends App {
+  static async getInitialProps(appContext) {
+    // calls page's `getInitialProps` and fills `appProps.pageProps`
+    const appProps = await App.getInitialProps(appContext);
 
-    if (Component && Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
+    return { ...appProps };
   }
 
   render() {
     const { Component, pageProps } = this.props;
-    return (
-      <Container>
-        <Component {...pageProps} />
-      </Container>
-    );
+    return <Component {...pageProps} />;
   }
 }
 
@@ -111,6 +106,24 @@ class ArticlePage extends React.Component {
 export default HomePage;
 ```
 
+### `generatePageError(statusCode[, additionalProps])`
+
+If you find the code to write the error object is a bit verbose, feel free to use the `generatePageError` helper:
+
+```jsx
+SomePage.getInitialProps = async () => {
+  const isAuthenticated = await getUser();
+
+  if (!isAuthenticated) {
+    return generatePageError(401);
+  }
+
+  return {};
+};
+```
+
+You can use the `additionalProps` argument to pass [custom props to the Error component](#custom-props).
+
 ### Custom error page
 
 By default, `withError` will display the default Next.js error page. If you need to display your own error page, you will need to pass it as the first parameter of your HoC:
@@ -122,6 +135,8 @@ import ErrorPage from './_error';
 
 export default withError(ErrorPage)(MyApp);
 ```
+
+Work to automate this [is tracked here](https://github.com/martpie/next-with-error/issues/2).
 
 ### Custom props
 

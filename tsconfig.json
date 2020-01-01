@@ -16,5 +16,6 @@
     "esModuleInterop": true,
     "lib": ["es2017", "dom"]
   },
-  "exclude": ["**/node_modules", "**/__tests__/**", "dist/**"]
+  "exclude": ["**/node_modules", "**/__tests__/**", "dist/**"],
+  "include": ["src", "next-with-error.test.ts"]
 }
