@@ -111,6 +111,10 @@ export default HomePage;
 If you find the code to write the error object is a bit verbose, feel free to use the `generatePageError` helper:
 
 ```jsx
+import { generatePageError } from 'next-with-error';
+
+// ...
+
 SomePage.getInitialProps = async () => {
   const isAuthenticated = await getUser();
 
