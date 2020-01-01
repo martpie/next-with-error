@@ -1,6 +1,8 @@
 import React from 'react';
-import ErrorPage from 'next/error';
+import dynamic from 'next/dynamic';
 import { default as NextApp, AppContext, AppProps } from 'next/app';
+
+const ErrorPage = dynamic(() => import('next/error'));
 
 export interface PageErrorInitialProps<T = Record<string, any>> {
   error?: {
@@ -39,7 +41,7 @@ export const generatePageError = function<T extends Record<string, any>>(
  * https://spectrum.chat/next-js/general/error-handling-in-async-getinitialprops~99400c6c-0da8-4de5-aecd-2ecf122e8ad0
  * https://github.com/nuxt/nuxt.js/issues/895#issuecomment-308682972
  */
-const withError = function(Error = ErrorPage) {
+const withError = function(ErrorComponent = ErrorPage) {
   return function<P extends PageErrorInitialProps>(WrappedComponent: typeof NextApp) {
     return class WithError extends React.Component<P & PageErrorInitialProps & AppProps> {
       public static getInitialProps = async (appContext: AppContext) => {
@@ -65,7 +67,7 @@ const withError = function(Error = ErrorPage) {
 
         if (error && error.statusCode >= 400) {
           const { statusCode, ...additionalErrorProps } = error;
-          return <Error statusCode={error.statusCode} {...additionalErrorProps} />;
+          return <ErrorComponent statusCode={error.statusCode} {...additionalErrorProps} />;
         }
 
         return <WrappedComponent {...this.props} />;
