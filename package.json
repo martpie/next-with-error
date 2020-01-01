@@ -1,6 +1,6 @@
 {
   "name": "next-with-error",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Next.js HoC to render the Error page and send the correct HTTP status code from any page",
   "main": "dist/next-with-error.js",
   "files": [
