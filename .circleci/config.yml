@@ -17,13 +17,16 @@ jobs:
           name: Install dependencies
           command: npm ci
       - run:
+          name: Install Puppeteer dependencies
+          command: bash .circleci/setup_puppeteer.sh
+      - run:
           name: Install tests apps dependencies
           command: npm ci --prefix=src/__tests__/__apps__/basic && npm ci --prefix=src/__tests__/__apps__/custom-error
       - run:
           name: 'Build'
           command: 'npm run build'
       - run:
-          name: 'Unit tests'
+          name: 'Tests'
           command: 'npm run test'
       - save_cache:
           paths:
