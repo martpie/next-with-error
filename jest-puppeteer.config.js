@@ -14,7 +14,7 @@ module.exports = {
       port: 3000
     },
     {
-      command: `npm run build --prefix=${customErrorAppPath} && npm run start -p 3001 --prefix=${customErrorAppPath}`,
+      command: `npm run build --prefix=${customErrorAppPath} && npm run start --prefix=${customErrorAppPath}`,
       launchTimeout: 50000,
       port: 3001
     }
