@@ -1,5 +1,8 @@
 # next-with-error
 
+[![Build Status](https://img.shields.io/circleci/project/github/martpie/next-with-error.svg)](https://circleci.com/gh/martpie/next-with-error)
+![Dependencies](https://img.shields.io/david/martpie/next-with-error)
+
 Next.js plugin to render the Error page and send the correct HTTP status code from any page's `getInitialProps`.
 
 This higher-order-components allows you to easily return Next.js's Error page + the correct HTTP status code just by defining `error.statusCode` in your pages `getInitialProps`:
