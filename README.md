@@ -12,7 +12,7 @@ This higher-order-components allows you to easily return Next.js's Error page + 
 
 const SomePage = () => (
   <h1>I will only render if error.statusCode is lesser than 400</h1>
-)
+);
 
 SomePage.getInitialProps = async () => {
   const isAuthenticated = await getUser();
@@ -20,7 +20,7 @@ SomePage.getInitialProps = async () => {
   if (!isAuthenticated) {
     return {
       error: {
-        statusCode: 401;
+        statusCode: 401
       }
     };
   }
@@ -28,7 +28,7 @@ SomePage.getInitialProps = async () => {
   return {
     // ...
   };
-}
+};
 ```
 
 ## Installation
