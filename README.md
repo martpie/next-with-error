@@ -185,3 +185,5 @@ const Error = (props) => {
 
 export default Error;
 ```
+
+⚠️ Be careful to add default values for your custom props in the `Error` component, as Next.js routing may bypass `next-with-error`'s behavior by showing the 404 page without the `message` variable (in this example).
