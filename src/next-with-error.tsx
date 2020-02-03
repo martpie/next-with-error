@@ -77,7 +77,7 @@ const withErrorHoC = function(ErrorComponent = ErrorPage) {
         if ('error' in pageProps && res) {
           if (!('statusCode' in pageProps.error))
             throw new Error(
-              'The error object should have a "statusCode" property.'
+              'The error object should have a "statusCode" property'
             );
 
           if (typeof pageProps.error.statusCode !== 'number')
