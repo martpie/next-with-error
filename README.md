@@ -145,6 +145,10 @@ export default withError(ErrorPage)(MyApp);
 
 Work to automate this [is tracked here](https://github.com/martpie/next-with-error/issues/2).
 
+The error object properties are accessible via the `props` of your custom Error component (`props.statusCode`, `props.message`, etc if you have custom props).
+
+⚠️ If your custom Error page has a `getInitialProps` method, the error object will be merged in `getInitialProps`'s return value. Be careful to not have conflicting names.
+
 ### Custom props
 
 You can also pass custom props to your Error Page component by adding anything you would like in the `error` object:
@@ -173,11 +177,13 @@ import React from 'react';
 const Error = (props) => {
   return (
     <>
-      <h1>Custom error page: {props.statusCode}</h1>
-      <p>{props.message}</p>
+      <h1>Custom error page: {props.error.statusCode}</h1>
+      <p>{props.error.message}</p>
     </>
   );
 };
 
 export default Error;
 ```
+
+⚠️ Be careful to add default values for your custom props in the `Error` component, as Next.js routing may bypass `next-with-error`'s behavior by showing the 404 page without the `message` variable (in this example).

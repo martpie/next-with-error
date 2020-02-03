@@ -1,8 +1,19 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { default as NextApp, AppContext, AppProps } from 'next/app';
+import {
+  default as NextApp,
+  AppContext,
+  AppProps,
+  AppInitialProps
+} from 'next/app';
+import { NextComponentType, NextPageContext } from 'next';
 
-const ErrorPage = dynamic(() => import('next/error'));
+// FIXME It looks like typings for next/error are wrong
+const ErrorPage = dynamic(() => import('next/error')) as NextComponentType<
+  NextPageContext,
+  {},
+  {}
+>;
 
 export interface PageErrorInitialProps<T = Record<string, any>> {
   error?: {
@@ -10,11 +21,10 @@ export interface PageErrorInitialProps<T = Record<string, any>> {
   } & T;
 }
 
-export type ExcludeErrorProps<P> = Pick<P, Exclude<keyof P, keyof PageErrorInitialProps>>;
-
-type AppInitialProps = {
-  pageProps: PageErrorInitialProps;
-};
+export type ExcludeErrorProps<P> = Pick<
+  P,
+  Exclude<keyof P, keyof PageErrorInitialProps>
+>;
 
 /**
  * Small helper to generate errors object if needed
@@ -41,21 +51,54 @@ export const generatePageError = function<T extends Record<string, any>>(
  * https://spectrum.chat/next-js/general/error-handling-in-async-getinitialprops~99400c6c-0da8-4de5-aecd-2ecf122e8ad0
  * https://github.com/nuxt/nuxt.js/issues/895#issuecomment-308682972
  */
-const withError = function(ErrorComponent = ErrorPage) {
-  return function<P extends PageErrorInitialProps>(WrappedComponent: typeof NextApp) {
-    return class WithError extends React.Component<P & PageErrorInitialProps & AppProps> {
+const withErrorHoC = function(ErrorComponent = ErrorPage) {
+  // First function returned, the one allowing to pass the App component as a parameter
+  return function<P extends PageErrorInitialProps>(
+    AppComponent: typeof NextApp
+  ) {
+    // The actualy component working as a wrapper around _app
+    return class WithError extends React.Component<
+      P & PageErrorInitialProps & AppProps
+    > {
       public static getInitialProps = async (appContext: AppContext) => {
-        let appProps: AppInitialProps = { pageProps: {} };
+        let appProps: AppInitialProps;
 
-        if (WrappedComponent.getInitialProps) {
-          appProps = await WrappedComponent.getInitialProps(appContext);
+        if (AppComponent.getInitialProps) {
+          appProps = await AppComponent.getInitialProps(appContext);
+        } else {
+          throw new Error(
+            'AppComponent should have a getInitialProps method as described in https://github.com/martpie/next-with-error#witherrorerrorpageapp'
+          );
         }
 
         const { res } = appContext.ctx;
-        const { error } = appProps.pageProps;
+        const { pageProps } = appProps;
 
-        if (error && res) {
-          res.statusCode = error.statusCode;
+        if ('error' in pageProps && res) {
+          if (!('statusCode' in pageProps.error))
+            throw new Error(
+              'The error object should have a "statusCode" property.'
+            );
+
+          if (typeof pageProps.error.statusCode !== 'number')
+            throw new Error('The "statusCode" property should be a number.');
+
+          // We are in an user-defined error, let's fetch the Error component
+          // getInitialProps if needed, and merge them with the error object
+          let errorInitialProps: Record<string, any> = {};
+
+          if (ErrorComponent.getInitialProps) {
+            errorInitialProps = await ErrorComponent.getInitialProps(
+              appContext.ctx
+            );
+
+            appProps.pageProps = {
+              ...errorInitialProps,
+              ...appProps.pageProps
+            };
+          }
+
+          res.statusCode = pageProps.error.statusCode;
         }
 
         return appProps;
@@ -66,14 +109,26 @@ const withError = function(ErrorComponent = ErrorPage) {
         const { error } = pageProps;
 
         if (error && error.statusCode >= 400) {
-          const { statusCode, ...additionalErrorProps } = error;
-          return <ErrorComponent statusCode={error.statusCode} {...additionalErrorProps} />;
+          const { error, ...otherPageProps } = pageProps;
+
+          const errorPageProps = {
+            ...otherPageProps,
+            ...error
+          };
+
+          return (
+            <AppComponent
+              {...this.props}
+              Component={ErrorComponent}
+              pageProps={errorPageProps}
+            />
+          );
         }
 
-        return <WrappedComponent {...this.props} />;
+        return <AppComponent {...this.props} />;
       }
     };
   };
 };
 
-export default withError;
+export default withErrorHoC;
