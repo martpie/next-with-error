@@ -42,4 +42,16 @@ describe('custom-error end-to-end test', () => {
     const content = await page.$eval('p', (e) => e.textContent);
     expect(content).toBe('something went wrong');
   });
+
+  test("custom error componen's getInitialProps should be correctly called and its result merged with the error object", async () => {
+    const page = await browser.newPage();
+    const response = await page.goto(`${BASE_URL}/posts/crash-me`);
+
+    if (!response) throw new Error('Could not access the page');
+
+    expect(response.status()).toBe(500);
+
+    const content = await page.$eval('h2', (e) => e.textContent);
+    expect(content).toBe('Additional prop: 42');
+  });
 });
