@@ -6,7 +6,7 @@ import {
   AppProps,
   AppInitialProps
 } from 'next/app';
-import { NextComponentType, NextPageContext } from 'next';
+import { NextComponentType, NextPageContext, NextPage } from 'next';
 
 // FIXME It looks like typings for next/error are wrong
 const ErrorPage = dynamic(() => import('next/error')) as NextComponentType<
@@ -51,7 +51,9 @@ export const generatePageError = function<T extends Record<string, any>>(
  * https://spectrum.chat/next-js/general/error-handling-in-async-getinitialprops~99400c6c-0da8-4de5-aecd-2ecf122e8ad0
  * https://github.com/nuxt/nuxt.js/issues/895#issuecomment-308682972
  */
-const withErrorHoC = function(ErrorComponent = ErrorPage) {
+const withErrorHoC = function(CustomErrorComponent?: NextPage<any>) {
+  const ErrorComponent: NextPage<any> = CustomErrorComponent ?? ErrorPage;
+
   // First function returned, the one allowing to pass the App component as a parameter
   return function<P extends PageErrorInitialProps>(
     AppComponent: typeof NextApp
