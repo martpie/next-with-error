@@ -145,7 +145,7 @@ export default withError(ErrorPage)(MyApp);
 
 Work to automate this [is tracked here](https://github.com/martpie/next-with-error/issues/2).
 
-The error object is accessible via the `props.error` variable.
+The error object properties are accessible via the `props` of your custom Error component (`props.statusCode`, `props.message`, etc if you have custom props).
 
 ⚠️ If your custom Error page has a `getInitialProps` method, the error object will be merged in `getInitialProps`'s return value. Be careful to not have conflicting names.
 

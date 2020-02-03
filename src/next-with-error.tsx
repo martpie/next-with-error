@@ -109,11 +109,18 @@ const withErrorHoC = function(ErrorComponent = ErrorPage) {
         const { error } = pageProps;
 
         if (error && error.statusCode >= 400) {
+          const { error, ...otherPageProps } = pageProps;
+
+          const errorPageProps = {
+            ...otherPageProps,
+            ...error
+          };
+
           return (
             <AppComponent
               {...this.props}
               Component={ErrorComponent}
-              pageProps={pageProps}
+              pageProps={errorPageProps}
             />
           );
         }
