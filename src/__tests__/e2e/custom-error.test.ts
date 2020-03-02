@@ -43,7 +43,7 @@ describe('custom-error end-to-end test', () => {
     expect(content).toBe('something went wrong');
   });
 
-  test("custom error componen's getInitialProps should be correctly called and its result merged with the error object", async () => {
+  test("custom error component's getInitialProps should be correctly called and its result merged with the error object", async () => {
     const page = await browser.newPage();
     const response = await page.goto(`${BASE_URL}/posts/crash-me`);
 
