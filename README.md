@@ -1,4 +1,4 @@
-# next-with-error
+# `next-with-error`
 
 [![Build Status](https://img.shields.io/circleci/project/github/martpie/next-with-error.svg)](https://circleci.com/gh/martpie/next-with-error)
 ![Dependencies](https://img.shields.io/david/martpie/next-with-error)
@@ -30,6 +30,20 @@ SomePage.getInitialProps = async () => {
   };
 };
 ```
+
+Contents:
+
+<!-- TOC depthfrom:2 -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [`withError([ErrorPage])(App)`](#witherrorerrorpageapp)
+  - [`generatePageError(statusCode[, additionalProps])`](#generatepageerrorstatuscode-additionalprops)
+  - [Custom error page](#custom-error-page)
+  - [Custom props](#custom-props)
+- [Automatic Static Optimization](#automatic-static-optimization)
+
+<!-- /TOC -->
 
 ## Installation
 
@@ -177,3 +191,11 @@ export default Error;
 ```
 
 ⚠️ Be careful to add default values for your custom props in the `Error` component, as Next.js routing may bypass `next-with-error`'s behavior by showing the 404 page without the `message` variable (in this example).
+
+## Automatic Static Optimization
+
+> You have opted-out of Automatic Static Optimization due to `getInitialProps` in `pages/_app`
+
+This plugin, like most Higher-order-Component relying on extending the `_app` file, will opt-you-out of the Automatic Static Optimization of Next.js. This is a known trade-off to avoid declaring this HoC on each one of your pages.
+
+Things will probably change [once Next.js support for plugins will ship](https://github.com/zeit/next.js/issues/9133).
