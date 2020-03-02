@@ -63,14 +63,18 @@ const withErrorHoC = function(CustomErrorComponent?: NextPage<any>) {
       P & PageErrorInitialProps & AppProps
     > {
       public static getInitialProps = async (appContext: AppContext) => {
-        let appProps: AppInitialProps;
+        let appProps: AppInitialProps = {
+          pageProps: {}
+        };
 
         if (AppComponent.getInitialProps) {
           appProps = await AppComponent.getInitialProps(appContext);
-        } else {
-          throw new Error(
-            'AppComponent should have a getInitialProps method as described in https://github.com/martpie/next-with-error#witherrorerrorpageapp'
-          );
+
+          if (typeof appProps.pageProps === 'undefined') {
+            console.error(
+              'If you have a getInitialProps method in your custom _app.js file, you must explicitly return pageProps. For more information, see: https://github.com/zeit/next.js#custom-app'
+            );
+          }
         }
 
         const { res } = appContext.ctx;

@@ -47,19 +47,10 @@ Adapt `pages/_app.js` so it looks similar to [what is described in the official 
  <summary>Example</summary>
 
 ```jsx
-import React from 'react';
-import App from 'next/app';
-
+// _app.jsx
 import withError from 'next-with-error';
 
 class MyApp extends App {
-  static async getInitialProps(appContext) {
-    // calls page's `getInitialProps` and fills `appProps.pageProps`
-    const appProps = await App.getInitialProps(appContext);
-
-    return { ...appProps };
-  }
-
   render() {
     const { Component, pageProps } = this.props;
     return <Component {...pageProps} />;
@@ -136,8 +127,7 @@ You can use the `additionalProps` argument to pass [custom props to the Error co
 By default, `withError` will display the default Next.js error page. If you need to display your own error page, you will need to pass it as the first parameter of your HoC:
 
 ```jsx
-import ErrorPage from './_error';
-
+import Error from './_error';
 // ...
 
 export default withError(ErrorPage)(MyApp);
