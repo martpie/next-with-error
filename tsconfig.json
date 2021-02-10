@@ -17,5 +17,5 @@
     "lib": ["es2017", "dom"]
   },
   "exclude": ["**/node_modules", "**/__tests__/**", "dist/**"],
-  "include": ["src", "next-with-error.test.ts"]
+  "include": ["next-env.d.ts", "src", "next-with-error.test.ts"]
 }
