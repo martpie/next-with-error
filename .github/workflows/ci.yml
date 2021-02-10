@@ -1,0 +1,42 @@
+name: tests
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-18.04, macos-latest]
+        node: [14]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Puppeteer dependencies
+        run: bash .github/workflows/setup_puppeteer.sh
+        if: startsWith(matrix.os,'ubuntu')
+
+      - name: Install tests apps dependencies
+        run: npm ci --prefix=src/__tests__/__apps__/basic && npm ci --prefix=src/__tests__/__apps__/custom-error
+
+      - name: 'Build'
+        run: 'npm run build'
+
+      - name: 'Tests'
+        run: 'npm run test'
