@@ -9,7 +9,7 @@ import {
 import { NextComponentType, NextPageContext, NextPage } from 'next';
 
 // FIXME It looks like typings for next/error are wrong
-const ErrorPage = dynamic(() => import('next/error')) as NextComponentType<
+const ErrorPage = dynamic(() => import('next/error').then(mod => mod.default)) as NextComponentType<
   NextPageContext,
   {},
   {}
